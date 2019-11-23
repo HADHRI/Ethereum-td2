@@ -1,4 +1,7 @@
 pragma solidity >=0.4.21 <0.6.0;
+import "./MintableToken.sol";
+import "./TokenTimelock.sol";
+import "./PausableToken.sol";
 contract AnasToken {
 //Constructor 
 //Set the total number of tokens 
@@ -16,6 +19,15 @@ mapping(address => uint256) public balanceOf;
 mapping(address => mapping(address => uint256))public allowance;
 
 
+//Token Distribution
+uint256 public tokenSalePercentage =70;
+uint256 public foundersPourcentage =10;
+uint256 public foundationPercentage =10;
+uint256 public partenersPercentage =10;
+// minimum amount of funds to be raised in weis
+uint public goal=10;
+// Amount of wei raised
+uint256 public weiRaised=10;
 //Transfer Event
  event Transfer(
      address indexed _from,
@@ -77,6 +89,38 @@ function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal v
         require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
         require(weiAmount != 0, "Crowdsale: weiAmount is 0");
         this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+    }
+
+ /**
+   * @dev enables token transfers, called when owner calls finalize()
+  */
+  /*function finalization() internal {
+    if(goalReached()) {
+      MintableToken _mintableToken = MintableToken(token);
+      uint256 _alreadyMinted = _mintableToken.totalSupply();
+
+      uint256 _finalTotalSupply = _alreadyMinted.div(tokenSalePercentage).mul(100);
+
+      foundersTimelock= new TokenTimelock(token, foundersFund, releaseTime);
+      foundationTimelock= new TokenTimelock(token, foundationFund, releaseTime);
+      partnersTimelock = new TokenTimelock(token, partnersFund, releaseTime);
+
+      _mintableToken.mint(address(foundersTimelock),   _finalTotalSupply.mul(foundersPercentage).div(100));
+      _mintableToken.mint(address(foundationTimelock), _finalTotalSupply.mul(foundationPercentage).div(100));
+      _mintableToken.mint(address(partnersTimelock),   _finalTotalSupply.mul(partnersPercentage).div(100));
+
+      _mintableToken.finishMinting();
+      // Unpause the token
+      PausableToken _pausableToken = PausableToken(token);
+      _pausableToken.unpause();
+      _pausableToken.transferOwnership(wallet);
+    }
+
+    super.finalization();
+  } */
+
+  function goalReached() public view returns (bool) {
+        return weiRaised >= goal;
     }
 
 
