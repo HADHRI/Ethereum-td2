@@ -3,7 +3,7 @@ contract AnasToken {
 //Constructor 
 //Set the total number of tokens 
 //Read the total of tokens
-uint256 public totalSupply;
+uint256 public totalSupply; 
 //Name
 string public name= "AnasToken";
 //Ticker
@@ -14,6 +14,8 @@ string public ticker="ANA";
 mapping(address => uint256) public balanceOf; 
 //Nested mapping for allowance fielc
 mapping(address => mapping(address => uint256))public allowance;
+
+
 //Transfer Event
  event Transfer(
      address indexed _from,
@@ -70,6 +72,12 @@ function transferFrom(address _from,address _to, uint256 _value)public returns(b
     emit Transfer(_from, _to, _value);
     return true;
 }
+
+function _preValidatePurchase(address beneficiary, uint256 weiAmount) internal view {
+        require(beneficiary != address(0), "Crowdsale: beneficiary is the zero address");
+        require(weiAmount != 0, "Crowdsale: weiAmount is 0");
+        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+    }
 
 
 
