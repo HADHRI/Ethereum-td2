@@ -25,7 +25,6 @@ contract StandardToken is ERC20, BasicToken {
   }
 
   
- 
 
  
   function increaseApproval (address _spender, uint _addedValue) public returns (bool success) {
